@@ -14,7 +14,7 @@ class PhidgetSpatial
 
     bool attatched() const;
 
-    int GetLastError() const;
+    int last_error() const;
 
     Vector3<double> acceleration() const;
     Vector3<double> angular_rate() const;
@@ -30,7 +30,7 @@ class PhidgetSpatial
 
     static PhidgetSpatial* instance_;
 
-    CPhidgetSpatialHandle handle;
+    CPhidgetSpatialHandle handle_;
 
     Vector3<double> acceleration_;
     Vector3<double> angular_rate_;
@@ -41,7 +41,6 @@ class PhidgetSpatial
 
     PhidgetSpatial();
 
-    static int __stdcall AttatchHandler(CPhidgetHandle handle, void* user_ptr);
     static int __stdcall DetachHandler(CPhidgetHandle handle, void* user_ptr);
     static int __stdcall ErrorHandler(CPhidgetHandle handle, void* user_ptr, int error, const char *unknown);
     static int __stdcall DataHandler(CPhidgetSpatialHandle handle, void* user_ptr, CPhidgetSpatial_SpatialEventDataHandle* data, int packets);

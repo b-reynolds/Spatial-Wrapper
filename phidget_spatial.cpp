@@ -37,20 +37,19 @@ bool PhidgetSpatial::initialize(int data_rate, const int& timeout)
     }
 
     // Create the spatial object
-    CPhidgetSpatial_create(&handle);
+    CPhidgetSpatial_create(&handle_);
 
     // Set the handlers for the device
-    CPhidget_set_OnAttach_Handler(reinterpret_cast<CPhidgetHandle>(handle), AttatchHandler, this);
-    CPhidget_set_OnDetach_Handler(reinterpret_cast<CPhidgetHandle>(handle), DetachHandler, this);
-    CPhidget_set_OnError_Handler(reinterpret_cast<CPhidgetHandle>(handle), ErrorHandler, this);
-    CPhidgetSpatial_set_OnSpatialData_Handler(handle, DataHandler, this);
+    CPhidget_set_OnDetach_Handler(reinterpret_cast<CPhidgetHandle>(handle_), DetachHandler, this);
+    CPhidget_set_OnError_Handler(reinterpret_cast<CPhidgetHandle>(handle_), ErrorHandler, this);
+    CPhidgetSpatial_set_OnSpatialData_Handler(handle_, DataHandler, this);
 
     // Open the Phidget Manager
-    CPhidget_open(reinterpret_cast<CPhidgetHandle>(handle), -1);
+    CPhidget_open(reinterpret_cast<CPhidgetHandle>(handle_), -1);
 
     // Wait for the Phidget to be attatched
 
-    if (CPhidget_waitForAttachment(reinterpret_cast<CPhidgetHandle>(handle), timeout))
+    if (CPhidget_waitForAttachment(reinterpret_cast<CPhidgetHandle>(handle_), timeout))
     {
         return false;
     }
@@ -66,7 +65,7 @@ bool PhidgetSpatial::initialize(int data_rate, const int& timeout)
     }
 
     // Set the data rate of the Phidget
-    CPhidgetSpatial_setDataRate(handle, data_rate);
+    CPhidgetSpatial_setDataRate(handle_, data_rate);
 
     attatched_ = true;
 
@@ -84,7 +83,7 @@ bool PhidgetSpatial::attatched() const
 /**
 * \brief Returns the last error reproted by the Phidget
 */
-int PhidgetSpatial::GetLastError() const
+int PhidgetSpatial::last_error() const
 {
     return error_;
 }
@@ -117,16 +116,6 @@ PhidgetSpatial::PhidgetSpatial()
 {
     handle = nullptr;
     attatched_ = false;
-}
-
-/**
- * \brief Called when the Phidget is attatched
- * \param handle phidget handle
- * \param user_ptr optional parameter for reinterpret casting
- */
-int PhidgetSpatial::AttatchHandler(CPhidgetHandle handle, void* user_ptr)
-{
-    return 0;
 }
 
 /**
